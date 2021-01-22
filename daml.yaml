@@ -1,5 +1,5 @@
 sdk-version: 1.7.0
-name: ctl
+name: daml-ctl
 version: 0.0.1
 source: daml
 parties:
