@@ -1,0 +1,9 @@
+sdk-version: 1.7.0
+name: ctl
+version: 0.0.1
+source: daml
+parties:
+- Alice
+dependencies:
+- daml-prim
+- daml-stdlib
