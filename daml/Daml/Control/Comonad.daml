@@ -1,4 +1,4 @@
-module Daml.Ctl.Comonad where
+module Daml.Control.Comonad where
 
 class Functor f => Comonad f where
   extract : f a -> a

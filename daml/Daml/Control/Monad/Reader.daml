@@ -1,8 +1,8 @@
-module Daml.Ctl.ReaderT where
+module Daml.Control.Monad.Reader where
 
 import Prelude
 import Prelude qualified ((.))
-import Daml.Ctl.Category
+import Daml.Control.Category
 import DA.Action
 
 newtype ReaderT m a b = ReaderT { run : a -> m b } deriving Functor

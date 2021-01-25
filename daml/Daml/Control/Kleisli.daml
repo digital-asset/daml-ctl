@@ -1,6 +1,6 @@
-module Daml.Ctl.Kleisli where
+module Daml.Control.Kleisli where
 
-import Daml.Ctl.Category
+import Daml.Control.Category
 
 -----------------------------------------------------------------------------
 -- |

@@ -1,4 +1,4 @@
-module Daml.Ctl.Id where
+module Daml.Data.Functor.Id where
 
 newtype Id a = Id a deriving (Eq, Show, Functor)
 

@@ -29,7 +29,7 @@
 -- These papers and more information on arrows can be found at
 -- <http://www.haskell.org/arrows/>.
 
-module Daml.Ctl.Arrow (
+module Daml.Control.Arrow (
     -- * Arrows
     Arrow(..), Kleisli(..),
     -- ** Derived combinators
@@ -53,7 +53,7 @@ import DA.Action ((>=>))
 import DA.Tuple (uncurry) -- fst, snd
 import DA.Either
 -- import Ctl.Monad.Fix
-import Daml.Ctl.Category
+import Daml.Control.Category
 -- import GHC.Base hiding ( (.), id )
 -- import GHC.Generics (Generic, Generic1)
 

@@ -13,7 +13,7 @@
 
 -- https://gitlab.haskell.org/ghc/ghc/issues/1773
 
-module Daml.Ctl.Category where
+module Daml.Control.Category where
 
 import qualified Prelude (identity,(.))
 

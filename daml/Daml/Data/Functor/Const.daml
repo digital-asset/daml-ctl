@@ -1,4 +1,4 @@
-module Daml.Ctl.Const where
+module Daml.Data.Functor.Const where
 
 newtype Const a b = Const { run : a } deriving (Eq, Show)
 

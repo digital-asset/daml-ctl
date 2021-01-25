@@ -1,4 +1,4 @@
-module Daml.Ctl.IOr where
+module Daml.Data.IOr where
 
 import Prelude hiding (Left, Right)
 import DA.Bifunctor

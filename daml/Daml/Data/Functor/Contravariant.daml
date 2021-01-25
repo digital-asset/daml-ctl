@@ -20,7 +20,7 @@
 -- @since 4.12.0.0
 ----------------------------------------------------------------------------
 
-module Daml.Ctl.Contravariant (
+module Daml.Data.Functor.Contravariant (
   -- * Contravariant Functors
     Contravariant(..)
   , phantom
@@ -46,8 +46,8 @@ module Daml.Ctl.Contravariant (
 -}
   ) where
 
-import Daml.Ctl.Const
-import Daml.Ctl.Category
+import Daml.Data.Functor.Const
+import Daml.Control.Category
 {-import Data.Function (on)
 
 import Data.Functor.Product
