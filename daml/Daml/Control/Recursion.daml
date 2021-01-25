@@ -27,7 +27,14 @@ This module differs from it in these ways:
 
 -}
 
-module Daml.Control.Recursion where
+module Daml.Control.Recursion (
+--  Fix(..)
+    Free(..)
+  , FreeF(..)
+  , Recursive(..)
+  , Corecursive(..)
+  , ListF(..)
+) where
 
 import Daml.Control.Category ((>>>),(<<<))
 import Daml.Control.Arrow ((&&&),(|||))
