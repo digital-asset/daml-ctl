@@ -5,6 +5,6 @@ The plan is to eventually split this up into separate libraries corresponding to
 
 **Expect breaking changes**
 
-# License & Ackanowledgements
+# License & Acknowledgements
 
 Licensed under the BSD License, as (at time of writing) most of the code is taken from Hackage.
