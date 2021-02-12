@@ -31,6 +31,7 @@ module Daml.Control.Recursion (
 --  Fix(..)
     Free(..)
   , FreeF(..)
+  , Cofree(..)
   , Recursive(..)
   , Corecursive(..)
   , ListF(..)
@@ -39,33 +40,6 @@ module Daml.Control.Recursion (
 import Daml.Control.Category ((>>>),(<<<))
 import Daml.Control.Arrow ((&&&),(|||))
 import Daml.Control.Comonad
-
--- newtype Fix f = Fix { unfix : f (Fix f) }
-
-data Free f a
-  = Pure a
-  | Impure (f (Free f a))
-
-data FreeF f a x
-  = PureF a
-  | ImpureF (f x)
-  deriving Functor
-
-instance Functor f => Recursive (Free f a) (FreeF f a) where
-  project (Pure a) = PureF a
-  project (Impure fx) = ImpureF fx
-
-instance Functor f => Corecursive (Free f a) (FreeF f a) where
-  embed _ = undefined
-
-data Cofree f a = Cofree {
-  attribute : a,
-  unwrap : f (Cofree f a)
-} deriving Functor
-
-instance Functor f => Comonad (Cofree f) where
-  extract (Cofree a _) = a
-  duplicate f = Cofree f $ fmap duplicate f.unwrap
 
 class Functor f => Recursive b f | b -> f b where
   project: b -> f b
@@ -116,6 +90,9 @@ _gana
   -> b
 _gana cosequence f b = (embed <<< fmap (_gana cosequence f <<< fmap f <<< join) <<< cosequence) b
 
+seqApo : (Recursive b f, Functor f) => Either b (f a) -> f (Either b a)
+seqApo = either (fmap Left . project) (fmap Right)
+
 -- Standard Base Functors
 
 data ListF a x = Nil | Cons with value: a, pattern: x deriving Functor
@@ -133,3 +110,40 @@ oursum = cata \case
            Cons x acc -> acc + x
 
 s = oursum [1..20]
+
+-- newtype Fix f = Fix { unfix : f (Fix f) }
+
+data Free f a
+  = Pure a
+  | Impure (f (Free f a))
+
+data FreeF f a x
+  = PureF a
+  | ImpureF (f x)
+  deriving Functor
+
+instance Functor f => Recursive (Free f a) (FreeF f a) where
+  project (Pure a) = PureF a
+  project (Impure fx) = ImpureF fx
+
+instance Functor f => Corecursive (Free f a) (FreeF f a) where
+  embed _ = undefined
+
+data Cofree f a
+  = Cofree {
+    attribute : a,
+    unwrap : f (Cofree f a)
+  } deriving Functor
+
+data CofreeF f a x
+  = CofreeF {
+    attribute: a,
+    unwrapf: f x
+  } deriving Functor
+
+instance Functor f => Comonad (Cofree f) where
+  extract (Cofree a _) = a
+  duplicate f = Cofree f $ fmap duplicate f.unwrap
+
+instance Functor f => Corecursive (Cofree f a) (CofreeF f a) where
+  embed = undefined
