@@ -1,0 +1,13 @@
+module Daml.Data.Functor.Identity where
+
+newtype Identity a = Identity a deriving (Eq, Show, Functor)
+
+instance Applicative Identity where
+  pure = Identity
+  Identity f <*> Identity a = Identity (f a)
+
+instance Action Identity where
+  Identity a >>= f = f a
+
+runIdentity : Identity a -> a
+runIdentity (Identity a) = a
