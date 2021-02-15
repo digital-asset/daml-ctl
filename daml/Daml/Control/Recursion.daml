@@ -32,6 +32,7 @@ module Daml.Control.Recursion (
     Free(..)
   , FreeF(..)
   , Cofree(..)
+  , CofreeF(..)
   , Recursive(..)
   , Corecursive(..)
   , ListF(..)
@@ -71,10 +72,10 @@ class Functor f => Corecursive b f | f -> b where
   embed: f b -> b
 
   ana : (a -> f a) -> a -> b
-  ana f b = (embed <<< fmap (ana f) <<< f) b
+  ana f a = (embed <<< fmap (ana f) <<< f) a
 
   apo : (a -> f (Either b a)) -> a -> b
-  apo f b = (embed <<< fmap (identity ||| apo f) <<< f) b
+  apo f a = (embed <<< fmap (identity ||| apo f) <<< f) a
 
   futu : (a -> f (Free f a)) -> a -> b
   futu = undefined
@@ -88,7 +89,7 @@ _gana
   -> (a -> f (m a))
   -> m (f (m a))
   -> b
-_gana cosequence f b = (embed <<< fmap (_gana cosequence f <<< fmap f <<< join) <<< cosequence) b
+_gana cosequence f mfma = (embed <<< fmap (_gana cosequence f <<< fmap f <<< join) <<< cosequence) mfma
 
 seqApo : (Recursive b f, Functor f) => Either b (f a) -> f (Either b a)
 seqApo = either (fmap Left . project) (fmap Right)
