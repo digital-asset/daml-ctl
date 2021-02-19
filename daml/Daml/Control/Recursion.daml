@@ -1,3 +1,4 @@
+{-# OPTIONS -Wno-deprecations #-} -- To supress 'Monad' warnings
 {-
 This module is adapted from Haskell's recursion-schemes. I've included the 
 copyright to give credit where it's due.

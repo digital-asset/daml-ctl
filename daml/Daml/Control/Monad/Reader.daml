@@ -1,7 +1,5 @@
 module Daml.Control.Monad.Reader where
 
-import Prelude
-import Prelude qualified ((.))
 import Daml.Control.Category
 import DA.Action
 

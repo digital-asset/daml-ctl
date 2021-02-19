@@ -1,3 +1,4 @@
+{-# OPTIONS -Wno-deprecations #-} -- To supress 'Monad' warnings
 -----------------------------------------------------------------------------
 -- |
 -- Copyright   :  (C) 2011-2018 Edward Kmett
