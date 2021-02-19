@@ -33,6 +33,7 @@ class Category cat where
     -- | morphism composition
     (.) : cat b c -> cat a b -> cat a c
 
+{- Luciano 2021/02/19 - commented to supress warnings (see top of page)
 {-# RULES
 "identity/left" forall p .
                 id . p = p
@@ -41,6 +42,7 @@ class Category cat where
 "association"   forall p q r .
                 (p . q) . r = p . (q . r)
  #-}
+ -}
 
 instance Category (->) where
     id = Prelude.identity
