@@ -37,6 +37,7 @@ module Daml.Control.Recursion (
   , Recursive(..)
   , Corecursive(..)
   , ListF(..)
+  , hylo
 ) where
 
 import Daml.Control.Category ((>>>),(<<<))
@@ -59,7 +60,7 @@ class Functor f => Recursive b f | b -> f b where
   gcata sequence f b = (_gcata sequence f >>> extract >>> f) b
 
 seqHisto : Functor f => f (Cofree f a) -> Cofree f (f a)
-seqHisto w = Cofree (fmap extract w) (fmap (seqHisto . unwrap) w)
+seqHisto f = Cofree (fmap extract f) (fmap (seqHisto . unwrap) f)
 
 _gcata
   : (Recursive b f , Comonad w)
@@ -94,6 +95,12 @@ _gana cosequence f mfma = (embed <<< fmap (_gana cosequence f <<< fmap f <<< joi
 
 seqApo : (Recursive b f, Functor f) => Either b (f a) -> f (Either b a)
 seqApo = either (fmap Left . project) (fmap Right)
+
+hylo : Functor f => (f b -> b) -> (a -> f a) -> a -> b
+hylo f g a = _hylo f g a
+
+_hylo : Functor f => (f b -> b) -> (a -> f a) -> a -> b
+_hylo f g a = (f . fmap (_hylo f g) . g) a
 
 -- Standard Base Functors
 
@@ -148,4 +155,4 @@ instance Functor f => Comonad (Cofree f) where
   duplicate f = Cofree f $ fmap duplicate f.unwrap
 
 instance Functor f => Corecursive (Cofree f a) (CofreeF f a) where
-  embed = undefined
+  embed (CofreeF a f) = Cofree a f
