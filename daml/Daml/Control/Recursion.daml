@@ -114,12 +114,6 @@ instance Corecursive [a] (ListF a) where
   embed Nil = []
   embed (Cons a as) = a :: as
 
-oursum = cata \case
-           Nil -> 0
-           Cons x acc -> acc + x
-
-s = oursum [1..20]
-
 -- newtype Fix f = Fix { unfix : f (Fix f) }
 
 data Free f a
@@ -153,6 +147,9 @@ data CofreeF f a x
 instance Functor f => Comonad (Cofree f) where
   extract (Cofree a _) = a
   duplicate f = Cofree f $ fmap duplicate f.unwrap
+
+instance Functor f => Recursive (Cofree f a) (CofreeF f a) where
+  project (Cofree a f) = CofreeF a f
 
 instance Functor f => Corecursive (Cofree f a) (CofreeF f a) where
   embed (CofreeF a f) = Cofree a f

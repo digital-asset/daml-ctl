@@ -5,3 +5,7 @@ class Functor f => Comonad f where
   duplicate : f a -> f (f a)
   extend : (f a -> a) -> f a -> f a
   extend f = fmap f . duplicate
+
+instance Comonad ((,) a) where
+  extract (_, x) = x
+  duplicate w@(a, _) = (a, w)
