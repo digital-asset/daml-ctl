@@ -30,7 +30,7 @@ module Daml.Data.Profunctor
 
 {-import Control.Arrow -}
 import Daml.Control.Category
-import Daml.Control.Kleisli
+import Daml.Control.Arrow (Kleisli(..))
 {-import Control.Comonad (Cokleisli(..))
 import Control.Monad (liftM)
 import Data.Bifunctor.Biff (Biff(..))
