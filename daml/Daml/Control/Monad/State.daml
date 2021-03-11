@@ -1,3 +1,4 @@
+{-# OPTIONS -Wno-deprecations #-} -- To supress 'Monad' warnings
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Control.Monad.Trans.State.Strict

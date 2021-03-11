@@ -1,3 +1,4 @@
+{-# OPTIONS -Wno-deprecations #-} -- To supress 'Monad' warnings
 {-{-# LANGUAGE CPP #-}
 #if __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE Safe #-}
