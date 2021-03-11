@@ -55,7 +55,7 @@ module Daml.Control.Monad.Writer (
 
 import Prelude hiding (mapA)
 -- mport Control.Monad.IO.Class
--- mport Control.Monad.Trans.Class
+import Daml.Control.Monad.Trans
 -- mport Data.Functor.Classes
 -- if MIN_VERSION_base(4,12,0)
 -- mport Data.Functor.Contravariant
@@ -237,16 +237,17 @@ instance (Monoid w, MonadFix m) => MonadFix (WriterT w m) where
     mfix m = WriterT $ mfix $ \ ~(a, _) -> runWriterT (m a)
     {-# INLINE mfix #-}
 
+instance (Monoid w, MonadIO m) => MonadIO (WriterT w m) where
+    liftIO = lift . liftIO
+    {-# INLINE liftIO #-}
+-}
+
+
 instance (Monoid w) => MonadTrans (WriterT w) where
     lift m = WriterT $ do
         a <- m
         return (a, mempty)
     {-# INLINE lift #-}
-
-instance (Monoid w, MonadIO m) => MonadIO (WriterT w m) where
-    liftIO = lift . liftIO
-    {-# INLINE liftIO #-}
--}
 
 -- if MIN_VERSION_base(4,4,0)
 -- nstance (Monoid w, MonadZip m) => MonadZip (WriterT w m) where
