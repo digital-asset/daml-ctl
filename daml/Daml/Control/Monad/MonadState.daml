@@ -35,7 +35,7 @@ module Daml.Control.Monad.MonadState (
 
 import Daml.Control.Monad.State qualified as Strict
 import Daml.Control.Monad.Writer qualified as Strict
-import Daml.Control.Monad.Reader (ReaderT)
+-- import Daml.Control.Monad.Reader (ReaderT)
 import Daml.Control.Monad.Trans
 
 -- | Minimal definition is either both of @get@ and @put@ or just @state@
