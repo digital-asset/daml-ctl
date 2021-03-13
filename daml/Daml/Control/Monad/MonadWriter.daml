@@ -27,6 +27,7 @@ module Daml.Control.Monad.MonadWriter (
 
 import Daml.Control.Monad.Writer qualified as Strict
 import Daml.Control.Monad.State qualified as Strict
+import Daml.Control.Monad.Reader (ReaderT, mapReaderT)
 import Daml.Control.Monad.Trans
 
 class (Monoid w, Monad m) => MonadWriter w m | m -> w where
@@ -155,18 +156,19 @@ instance MonadWriter w m => MonadWriter w (MaybeT m) where
     listen = Maybe.liftListen listen
     pass   = Maybe.liftPass pass
 
-instance MonadWriter w m => MonadWriter w (ReaderT r m) where
-    writer = lift . writer
-    tell   = lift . tell
-    listen = mapReaderT listen
-    pass   = mapReaderT pass
-
 instance MonadWriter w m => MonadWriter w (Lazy.StateT s m) where
     writer = lift . writer
     tell   = lift . tell
     listen = Lazy.liftListen listen
     pass   = Lazy.liftPass pass
 -}
+
+instance MonadWriter w m => MonadWriter w (ReaderT r m) where
+    writer = lift . writer
+    tell   = lift . tell
+    listen = mapReaderT listen
+    pass   = mapReaderT pass
+
 
 instance MonadWriter w m => MonadWriter w (Strict.StateT s m) where
     writer = lift . writer
