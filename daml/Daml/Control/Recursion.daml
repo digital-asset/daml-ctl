@@ -29,8 +29,8 @@ This module differs from it in these ways:
 -}
 
 module Daml.Control.Recursion (
---  Fix(..)
-    Free(..)
+    Fix(..)
+  , Free(..)
   , FreeF(..)
   , Cofree(..)
   , CofreeF(..)
@@ -114,7 +114,7 @@ instance Corecursive [a] (ListF a) where
   embed Nil = []
   embed (Cons a as) = a :: as
 
--- newtype Fix f = Fix { unfix : f (Fix f) }
+newtype Fix f = Fix { unfix : f (Fix f) }
 
 data Free f a
   = Pure a
