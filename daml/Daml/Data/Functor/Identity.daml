@@ -1,3 +1,8 @@
+--
+-- Copyright (c) 2021, Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
+-- SPDX-License-Identifier: BSD-3-Clause
+--
+
 module Daml.Data.Functor.Identity where
 
 newtype Identity a = Identity a deriving (Eq, Show, Functor)
