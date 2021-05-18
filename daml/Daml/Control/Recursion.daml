@@ -80,7 +80,7 @@ class Functor f => Corecursive b f | f -> b where
   apo f a = (embed <<< fmap (identity ||| apo f) <<< f) a
 
   futu : (a -> f (Free f a)) -> a -> b
-  futu = undefined
+  futu = gana seqFutu
 
   gana : Monad m => (forall z . m (f z) -> f (m z)) -> (a -> f (m a)) -> a -> b
   gana cosequence f a = (_gana cosequence f <<< pure <<< f) a
@@ -95,6 +95,10 @@ _gana cosequence f mfma = (embed <<< fmap (_gana cosequence f <<< fmap f <<< joi
 
 seqApo : (Recursive b f, Functor f) => Either b (f a) -> f (Either b a)
 seqApo = either (fmap Left . project) (fmap Right)
+
+seqFutu : (Functor f) => Free f (f a) -> f (Free f a)
+seqFutu (Impure fa) = Impure . seqFutu <$> fa
+seqFutu (Pure fa) = Pure <$> fa
 
 hylo : Functor f => (f b -> b) -> (a -> f a) -> a -> b
 hylo f g a = _hylo f g a
@@ -119,6 +123,16 @@ newtype Fix f = Fix { unfix : f (Fix f) }
 data Free f a
   = Pure a
   | Impure (f (Free f a))
+  deriving Functor
+
+instance Functor f => Applicative (Free f) where
+  pure = Pure
+  Pure f <*> freea = f <$> freea
+  Impure g <*> f = Impure ((<*> f) <$> g)
+
+instance Functor f => Action (Free f) where
+  Pure a >>= f = f a
+  Impure m >>= f = Impure ((>>= f) <$> m)
 
 data FreeF f a x
   = PureF a
