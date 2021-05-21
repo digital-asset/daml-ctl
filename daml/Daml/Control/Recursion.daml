@@ -64,6 +64,9 @@ class Functor f => Recursive b f | b -> f b where
   gcata : Comonad w => (forall z . f (w z) -> w (f z)) -> (f (w a) -> a) -> b -> a
   gcata sequence f b = (_gcata sequence f >>> extract >>> f) b
 
+distPara : f (b, a) -> (b, f a)
+distPara = undefined
+
 distHisto : Functor f => f (Cofree f a) -> Cofree f (f a)
 distHisto f = Cofree (fmap extract f) (fmap (distHisto . unwrap) f)
 

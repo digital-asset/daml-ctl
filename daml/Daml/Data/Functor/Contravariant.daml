@@ -40,10 +40,10 @@ module Daml.Data.Functor.Contravariant (
   , Equivalence(..)
   , defaultEquivalence
   , comparisonEquivalence
+-}
 
   -- * Dual arrows
   , Op(..)
--}
   ) where
 
 import Daml.Data.Functor.Const
@@ -242,12 +242,15 @@ defaultEquivalence = Equivalence (==)
 
 comparisonEquivalence : Comparison a -> Equivalence a
 comparisonEquivalence (Comparison p) = Equivalence $ \a b -> p a b == EQ
+-}
 
 -- | Dual function arrows.
 newtype Op a b = Op { getOp : b -> a }
 
+{-
 deriving instance Semigroup a => Semigroup (Op a b)
 deriving instance Monoid a => Monoid (Op a b)
+-}
 
 instance Category Op where
   id = Op id
@@ -256,6 +259,7 @@ instance Category Op where
 instance Contravariant (Op a) where
   contramap f g = Op (getOp g . f)
 
+{-
 instance Num a => Num (Op a b) where
   Op f + Op g = Op $ \a -> f a + g a
   Op f * Op g = Op $ \a -> f a * g a
