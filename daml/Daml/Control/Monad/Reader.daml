@@ -157,6 +157,9 @@ instance MonadTrans (ReaderT r) where
     lift   = liftReaderT
     {-# INLINE lift #-}
 
+instance CanAbort m => CanAbort (ReaderT s m) where
+  abort = lift . abort
+
 {-
 instance (MonadIO m) => MonadIO (ReaderT r m) where
     liftIO = lift . liftIO

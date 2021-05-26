@@ -259,6 +259,9 @@ instance MonadTrans (StateT s) where
 --    {-# INLINE contramap #-}
 -- endif
 
+instance CanAbort m => CanAbort (StateT s m) where
+  abort = lift . abort
+
 -- | Fetch the current value of the state within the monad.
 get : (Action m) => StateT s m s
 get = state $ \ s -> (s, s)

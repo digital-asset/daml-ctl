@@ -249,6 +249,9 @@ instance (Monoid w) => MonadTrans (WriterT w) where
         return (a, mempty)
     {-# INLINE lift #-}
 
+instance (Monoid w, CanAbort m) => CanAbort (WriterT w m) where
+  abort = lift . abort
+
 -- if MIN_VERSION_base(4,4,0)
 -- nstance (Monoid w, MonadZip m) => MonadZip (WriterT w m) where
 --    mzipWith f (WriterT x) (WriterT y) = WriterT $

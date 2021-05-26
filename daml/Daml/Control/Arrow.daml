@@ -48,7 +48,7 @@ module Daml.Control.Arrow (
     ArrowLoop(..)
     ) where
 
-import Prelude (Applicative, Action, Functor, (*>), (<*),  ($), const)
+import Prelude (Applicative, Action, Functor, (*>), (<*),  ($), const, CanAbort(..))
 import DA.Action ((>=>))
 import DA.Tuple (uncurry) -- fst, snd
 import DA.Either
@@ -210,6 +210,9 @@ instance Action m => Arrow (Kleisli m) where
     arr f = Kleisli (return . f)
     first (Kleisli f) = Kleisli (\ ~(b,d) -> f b >>= \c -> return (c,d))
     second (Kleisli f) = Kleisli (\ ~(d,b) -> f b >>= \c -> return (d,c))
+
+instance CanAbort m => CanAbort (Kleisli m a) where -- because of the order of parameters it's not possible to write a MonadTrans instance for Kleisli.
+  abort = Kleisli . const . abort
 
 -- | The identity arrow, which plays the role of 'return' in arrow notation.
 returnA : Arrow a => a b b
