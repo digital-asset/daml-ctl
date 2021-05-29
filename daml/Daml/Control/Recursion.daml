@@ -38,6 +38,7 @@ module Daml.Control.Recursion (
   , Corecursive(..)
   , ListF(..)
   , hylo
+  , ghylo
   , distCata
   , distPara
   , distHisto
@@ -132,11 +133,19 @@ distFutu (Pure fa) = Pure <$> fa
 
 -- | An `ana`morphism followed by a `cata`morphism, fused into a single O(n) op.
 hylo : Functor f => (f b -> b) -> (a -> f a) -> a -> b
-hylo f g a = _hylo f g a
+hylo f g a = (f . fmap (hylo f g) . g) a
 
--- | HIDE use to work around lack of local recursion
-_hylo : Functor f => (f b -> b) -> (a -> f a) -> a -> b
-_hylo f g a = (f . fmap (_hylo f g) . g) a
+-- | A generalized hylomorphism: an unfold followed by a fold; the operations are fused together.
+ghylo : (Comonad w, Functor f, Monad m)
+  => (forall c. f (w c) -> w (f c))
+  -> (forall d. m (f d) -> f (m d))
+  -> (f (w b) -> b)
+  -> (a -> f (m a))
+  -> a
+  -> b
+ghylo w m f g a = (f . fmap (hylo alg coalg) . g) a where
+  coalg = fmap join . m . fmap g
+  alg   = fmap f . w . fmap duplicate
 
 -- Standard Base Functors
 
