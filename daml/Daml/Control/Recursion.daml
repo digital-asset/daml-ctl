@@ -38,11 +38,18 @@ module Daml.Control.Recursion (
   , Corecursive(..)
   , ListF(..)
   , hylo
+  , distCata
+  , distPara
+  , distHisto
+  , distAna
+  , distApo
+  , distFutu
 ) where
 
 import Daml.Control.Category ((>>>),(<<<))
 import Daml.Control.Arrow ((&&&),(|||))
 import Daml.Control.Comonad
+import Daml.Data.Functor.Identity
 
 class Functor f => Recursive b f | b -> f b where
   project: b -> f b
@@ -64,8 +71,11 @@ class Functor f => Recursive b f | b -> f b where
   gcata : Comonad w => (forall z . f (w z) -> w (f z)) -> (f (w a) -> a) -> b -> a
   gcata sequence f b = (_gcata sequence f >>> extract >>> f) b
 
-distPara : f (b, a) -> (b, f a)
-distPara = undefined
+distCata : Functor f => f (Identity a) -> Identity (f a)
+distCata = Identity . fmap runIdentity
+
+distPara : Corecursive b f => f (b, a) -> (b, f a)
+distPara f = (embed (fmap fst f), fmap snd f)
 
 distHisto : Functor f => f (Cofree f a) -> Cofree f (f a)
 distHisto f = Cofree (fmap extract f) (fmap (distHisto . unwrap) f)
@@ -109,6 +119,9 @@ _gana
   -> m (f (m a))
   -> b
 _gana cosequence f mfma = (embed <<< fmap (_gana cosequence f <<< fmap f <<< join) <<< cosequence) mfma
+
+distAna : Functor f => Identity (f a) -> f (Identity a)
+distAna = fmap Identity . runIdentity
 
 distApo : (Recursive b f, Functor f) => Either b (f a) -> f (Either b a)
 distApo = either (fmap Left . project) (fmap Right)
