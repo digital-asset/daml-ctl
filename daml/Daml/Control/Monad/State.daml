@@ -188,8 +188,7 @@ withStateT f m = StateT $ runStateT m . f
 {-# INLINE withStateT #-}
 
 instance (Functor m) => Functor (StateT s m) where
-    fmap f m = StateT $ \ s ->
-        fmap (\ (a, s') -> (f a, s')) $ runStateT m s
+    fmap f m = StateT $ fmap (\ (a, s') -> (f a, s')) . runStateT m
     {-# INLINE fmap #-}
 
 instance (Functor m, Action m) => Applicative (StateT s m) where
@@ -200,7 +199,7 @@ instance (Functor m, Action m) => Applicative (StateT s m) where
         (x, s'') <- mx s'
         return (f x, s'')
     {-# INLINE (<*>) #-}
-    m *> k = m >>= \_ -> k
+    m *> k = m >> k
     {-# INLINE (*>) #-}
 
 {-
@@ -269,7 +268,7 @@ get = state $ \ s -> (s, s)
 
 -- | @'put' s@ sets the state within the monad to @s@.
 put : (Action m) => s -> StateT s m ()
-put s = state $ \ _ -> ((), s)
+put s = state $ const ((), s)
 {-# INLINE put #-}
 
 -- | @'modify' f@ is an action that updates the state to the result of
