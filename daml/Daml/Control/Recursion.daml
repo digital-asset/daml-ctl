@@ -31,7 +31,6 @@ This module differs from it in these ways:
 module Daml.Control.Recursion (
     Fix(..)
   , Free(..)
-  , FreeF(..)
   , Cofree(..)
   , CofreeF(..)
   , Recursive(..)
@@ -50,6 +49,8 @@ module Daml.Control.Recursion (
 import Daml.Control.Category ((>>>),(<<<))
 import Daml.Control.Arrow ((&&&),(|||))
 import Daml.Control.Comonad
+import Daml.Control.Monad.Free (FreeF)
+import Daml.Control.Monad.Free qualified as F (FreeF(..))
 import Daml.Data.Functor.Identity
 
 class Functor f => Recursive b f | b -> f b where
@@ -103,7 +104,7 @@ class Functor f => Corecursive b f | f -> b where
 
   -- | Manually unfold multiple levels at a time. i.e. determine the order of unfold.
   -- `Pure` signifies continuing the unfold depth-first, as with `ana`.
-  -- `Impure` allows you to deterministically unfold a subtree (the type system will enforce safety).
+  -- `Free` allows you to deterministically unfold a subtree (the type system will enforce safety).
   futu : (a -> f (Free f a)) -> a -> b
   futu = gana distFutu
 
@@ -128,7 +129,7 @@ distApo : (Recursive b f, Functor f) => Either b (f a) -> f (Either b a)
 distApo = either (fmap Left . project) (fmap Right)
 
 distFutu : (Functor f) => Free f (f a) -> f (Free f a)
-distFutu (Impure fa) = Impure . distFutu <$> fa
+distFutu (Free fa) = Free . distFutu <$> fa
 distFutu (Pure fa) = Pure <$> fa
 
 -- | An `ana`morphism followed by a `cata`morphism, fused into a single O(n) op.
@@ -165,29 +166,24 @@ newtype Fix f = Fix { unfix : f (Fix f) }
 -- | The free monad
 data Free f a
   = Pure a
-  | Impure (f (Free f a))
+  | Free (f (Free f a))
   deriving Functor
 
 instance Functor f => Applicative (Free f) where
   pure = Pure
   Pure f <*> freea = f <$> freea
-  Impure g <*> f = Impure ((<*> f) <$> g)
+  Free g <*> f = Free ((<*> f) <$> g)
 
 instance Functor f => Action (Free f) where
   Pure a >>= f = f a
-  Impure m >>= f = Impure ((>>= f) <$> m)
-
-data FreeF f a x
-  = PureF a
-  | ImpureF (f x)
-  deriving Functor
+  Free m >>= f = Free ((>>= f) <$> m)
 
 instance Functor f => Recursive (Free f a) (FreeF f a) where
-  project (Pure a) = PureF a
-  project (Impure fx) = ImpureF fx
+  project (Pure a) = F.Pure a
+  project (Free fx) = F.Free fx
 
 instance Functor f => Corecursive (Free f a) (FreeF f a) where
-  embed _ = error "Undefined: Corecursive FreeF"
+  embed _ = error "Undefined: Corecursive F.Free"
 
 -- | The cofree co-monad
 data Cofree f a
