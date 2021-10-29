@@ -1,6 +1,6 @@
 sdk-version: 1.17.1
 name: daml-ctl
-version: 1.1.0
+version: 1.0.1
 source: daml
 parties:
 - Alice
