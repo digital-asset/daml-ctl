@@ -38,16 +38,16 @@ than using the 'Control.Monad.State.State' monad.
     Advanced School of Functional Programming, 1995.
 -}
 
-module Daml.Control.Monad.MonadReader (
+module Daml.Control.Monad.Reader.Class (
     MonadReader(..),
     asks,
     ) where
 
-import Daml.Control.Monad.Reader qualified as ReaderT
-import Daml.Control.Monad.Reader (ReaderT)
-import Daml.Control.Monad.State qualified as Strict
-import Daml.Control.Monad.Writer qualified as Strict
-import Daml.Control.Monad.Trans (lift)
+import Daml.Control.Monad.Trans.Reader qualified as ReaderT
+import Daml.Control.Monad.Trans.Reader (ReaderT)
+import Daml.Control.Monad.Trans.State qualified as Strict
+import Daml.Control.Monad.Trans.Writer qualified as Strict
+import Daml.Control.Monad.Trans.Class (lift)
 
 -- ----------------------------------------------------------------------------
 -- class MonadReader

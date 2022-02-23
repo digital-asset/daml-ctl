@@ -26,7 +26,8 @@
 -- "Control.Monad.Trans.State.Lazy".
 -----------------------------------------------------------------------------
 
-module Daml.Control.Monad.State (
+-- If you don't need a transformer, consider using DA.Action.State
+module Daml.Control.Monad.Trans.State (
     -- * The State monad
     State,
     state,
@@ -66,7 +67,7 @@ module Daml.Control.Monad.State (
 
 -- mport Control.Monad.IO.Class
 -- mport Control.Monad.Signatures
-import Daml.Control.Monad.Trans
+import Daml.Control.Monad.Trans.Class
 -- #if MIN_VERSION_base(4,12,0)
 -- import Data.Functor.Contravariant
 -- #endif

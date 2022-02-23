@@ -28,7 +28,7 @@
 --
 -- Monads for free.
 ----------------------------------------------------------------------------
-module Daml.Control.Monad.MonadFree
+module Daml.Control.Monad.Free.Class
   ( MonadFree(..)
   , liftF
   , wrapT
@@ -57,10 +57,10 @@ import Data.Monoid
 #endif
 -}
 
-import Daml.Control.Monad.Reader
-import Daml.Control.Monad.Writer qualified as Strict
-import Daml.Control.Monad.State qualified as Strict
-import Daml.Control.Monad.Trans
+import Daml.Control.Monad.Trans.Reader
+import Daml.Control.Monad.Trans.Writer qualified as Strict
+import Daml.Control.Monad.Trans.State qualified as Strict
+import Daml.Control.Monad.Trans.Class
 
 -- |
 -- Monads provide substitution ('fmap') and renormalization ('Control.Monad.join'):

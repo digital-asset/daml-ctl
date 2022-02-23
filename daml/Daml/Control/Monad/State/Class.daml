@@ -26,17 +26,17 @@
 
 -----------------------------------------------------------------------------
 
-module Daml.Control.Monad.MonadState (
+module Daml.Control.Monad.State.Class (
     MonadState(..),
     modify,
 --  modify',
     gets
   ) where
 
-import Daml.Control.Monad.State qualified as Strict
-import Daml.Control.Monad.Writer qualified as Strict
+import Daml.Control.Monad.Trans.State qualified as Strict
+import Daml.Control.Monad.Trans.Writer qualified as Strict
 -- import Daml.Control.Monad.Reader (ReaderT)
-import Daml.Control.Monad.Trans
+import Daml.Control.Monad.Trans.Class
 
 -- | Minimal definition is either both of @get@ and @put@ or just @state@
 class Monad m => MonadState s m | m -> s where

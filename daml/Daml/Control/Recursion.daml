@@ -49,8 +49,8 @@ module Daml.Control.Recursion (
 import Daml.Control.Category ((>>>),(<<<))
 import Daml.Control.Arrow ((&&&),(|||))
 import Daml.Control.Comonad
-import Daml.Control.Monad.Free (FreeF, FreeT(..), runFreeT)
-import Daml.Control.Monad.Free qualified as F (FreeF(..))
+import Daml.Control.Monad.Trans.Free (FreeF, FreeT(..), runFreeT)
+import Daml.Control.Monad.Trans.Free qualified as F (FreeF(..))
 import Daml.Data.Functor.Identity
 
 class Functor f => Recursive b f | b -> f b where

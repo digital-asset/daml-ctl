@@ -27,7 +27,7 @@
 -- applies a sequence of monad transformers.
 -----------------------------------------------------------------------------
 
-module Daml.Control.Monad.Trans (
+module Daml.Control.Monad.Trans.Class (
     -- * Transformer class
     MonadTrans(..)
 

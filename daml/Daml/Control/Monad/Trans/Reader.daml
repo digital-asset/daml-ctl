@@ -18,7 +18,7 @@
 -- "Control.Monad.Trans.State" instead.
 -----------------------------------------------------------------------------
 
-module Daml.Control.Monad.Reader (
+module Daml.Control.Monad.Trans.Reader (
     -- * The Reader monad
     Reader,
     reader,
@@ -38,7 +38,7 @@ module Daml.Control.Monad.Reader (
 --  liftCatch,
     ) where
 
-import Daml.Control.Monad.Trans (MonadTrans(..))
+import Daml.Control.Monad.Trans.Class (MonadTrans(..))
 import Daml.Data.Functor.Identity
 
 -- | The parameterizable reader monad.

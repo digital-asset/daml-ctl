@@ -31,7 +31,7 @@
 -- use "Control.Monad.Trans.Writer.CPS" instead.
 -----------------------------------------------------------------------------
 
-module Daml.Control.Monad.Writer (
+module Daml.Control.Monad.Trans.Writer (
     -- * The Writer monad
     Writer,
     writer,
@@ -55,7 +55,7 @@ module Daml.Control.Monad.Writer (
 
 import Prelude hiding (mapA)
 -- mport Control.Monad.IO.Class
-import Daml.Control.Monad.Trans
+import Daml.Control.Monad.Trans.Class
 -- mport Data.Functor.Classes
 -- if MIN_VERSION_base(4,12,0)
 -- mport Data.Functor.Contravariant

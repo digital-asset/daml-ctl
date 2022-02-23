@@ -31,7 +31,7 @@
 -- The free monad transformer
 --
 ----------------------------------------------------------------------------
-module Daml.Control.Monad.Free
+module Daml.Control.Monad.Trans.Free
   (
   -- * The base functor
     FreeF(..)
@@ -92,11 +92,11 @@ import Data.Monoid
 #endif
 -}
 
-import Daml.Control.Monad.MonadReader
-import Daml.Control.Monad.MonadWriter
-import Daml.Control.Monad.MonadState
-import Daml.Control.Monad.MonadFree
-import Daml.Control.Monad.Trans
+import Daml.Control.Monad.Reader.Class
+import Daml.Control.Monad.Writer.Class
+import Daml.Control.Monad.State.Class
+import Daml.Control.Monad.Free.Class
+import Daml.Control.Monad.Trans.Class
 import Daml.Data.Functor.Identity
 import DA.Traversable
 import DA.Bifunctor

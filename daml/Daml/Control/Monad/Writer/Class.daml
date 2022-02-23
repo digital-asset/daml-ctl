@@ -19,16 +19,16 @@
 --          Advanced School of Functional Programming, 1995.
 -----------------------------------------------------------------------------
 
-module Daml.Control.Monad.MonadWriter (
+module Daml.Control.Monad.Writer.Class (
     MonadWriter(..),
     listens,
     censor,
   ) where
 
-import Daml.Control.Monad.Writer qualified as Strict
-import Daml.Control.Monad.State qualified as Strict
-import Daml.Control.Monad.Reader (ReaderT, mapReaderT)
-import Daml.Control.Monad.Trans
+import Daml.Control.Monad.Trans.Writer qualified as Strict
+import Daml.Control.Monad.Trans.State qualified as Strict
+import Daml.Control.Monad.Trans.Reader (ReaderT, mapReaderT)
+import Daml.Control.Monad.Trans.Class
 
 class (Monoid w, Monad m) => MonadWriter w m | m -> w where
     {-# MINIMAL (writer | tell), listen, pass #-}
