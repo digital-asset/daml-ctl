@@ -67,9 +67,9 @@ commands:
       - run:
           name: "Tag and push to Github"
           command: |
-            echo "My token is $GITHUB_TOKEN"
-            echo "Attempting to login..."
-            gh auth login --with-token \<<< "$GITHUB_TOKEN"
+            # echo "My token is $GITHUB_TOKEN"
+            # echo "Attempting to login..."
+            # gh auth login --with-token \<<< "$GITHUB_TOKEN"
 
             echo "After login -> check status..."
             gh auth status
