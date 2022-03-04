@@ -129,11 +129,15 @@ workflows:
                 - master
   daml_ctl_release:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              ignore:
+                - master
       - release:
           requires:
             - build
-          filters:
-            branches:
-              only:
-                - master
+          # filters:
+          #   branches:
+          #     only:
+          #       - master
