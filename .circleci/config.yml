@@ -61,9 +61,9 @@ commands:
               echo "Tag ${VERSION} already exists; Skipping Release."
               circleci-agent step halt
             fi
-      # - add_ssh_keys:
-      #     fingerprints:
-      #       - "c6:75:e6:07:68:9a:a1:99:93:9f:cd:d1:3a:89:49:4a"
+      - add_ssh_keys:
+          fingerprints:
+            - "c6:75:e6:07:68:9a:a1:99:93:9f:cd:d1:3a:89:49:4a"
       - run:
           name: "Tag and push to Github"
           command: |
@@ -73,9 +73,8 @@ commands:
             # git tag v${VERSION}
             # git push origin v${VERSION}
       - store_artifacts:
-          path:
-            path: ./daml/dist/daml-ctl-${VERSION}.dar
-            destination: daml-ctl-dar
+          path: ./daml/dist/daml-ctl-${VERSION}.dar
+          destination: daml-ctl-dar
 
 
 jobs:
