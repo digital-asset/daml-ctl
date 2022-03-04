@@ -93,7 +93,7 @@ jobs:
       - install_yq
       - restore_cache:
           keys:
-            - daml-{{ checksum "daml.yaml" }}
+            - daml-ctl-{{ checksum "daml.yaml" }}
       - set_sdk_version
       - install_sdk
       - run:
@@ -105,7 +105,7 @@ jobs:
       - save_cache:
           paths:
             - .daml
-          key: daml-{{ checksum "daml.yaml" }}
+          key: daml-ctl-{{ checksum "daml.yaml" }}
   release:
     executor: daml-docker-executor
     steps:
@@ -114,7 +114,7 @@ jobs:
       - install_gh
       - restore_cache:
           keys:
-            - daml-{{ checksum "daml.yaml" }}
+            - daml-ctl-{{ checksum "daml.yaml" }}
       - run_release
 
 workflows:
