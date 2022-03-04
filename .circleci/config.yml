@@ -85,6 +85,10 @@ jobs:
       - run:
           name: Daml test
           command: daml test
+      - run:
+          name: Print stuff
+          command: |
+            echo "{{ .Revision }}"
       - save_cache:
           paths:
             - .daml
