@@ -104,7 +104,7 @@ jobs:
           command: daml test
       - save_cache:
           paths:
-            - ~/.daml
+            - .daml
           key: daml-{{ checksum "daml.yaml" }}
   release:
     executor: daml-docker-executor
