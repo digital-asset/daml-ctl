@@ -109,7 +109,7 @@ workflows:
             branches:
               ignore:
                 - master
-  release:
+  build_and_release:
     jobs:
       - build:
           filters:
