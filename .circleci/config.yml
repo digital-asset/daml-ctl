@@ -85,7 +85,7 @@ jobs:
       - save_cache:
           paths:
             - .daml
-          key: daml-ctl-{{ checksum "daml.yaml" }}
+          key: daml-ctl-{{ .Revision }}
   release:
     executor: daml-docker-executor
     steps:
@@ -94,7 +94,7 @@ jobs:
       - install_gh
       - restore_cache:
           keys:
-            - daml-ctl-{{ checksum "daml.yaml" }}
+            - daml-ctl-{{ .Revision }}
       - run_release
 
 workflows:
