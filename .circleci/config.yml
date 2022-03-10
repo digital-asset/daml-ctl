@@ -74,9 +74,6 @@ jobs:
     steps:
       - checkout
       - install_yq
-      - restore_cache:
-          keys:
-            - daml-ctl-{{ checksum "daml.yaml" }}
       - set_sdk_version
       - install_sdk
       - run:
