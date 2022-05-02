@@ -47,13 +47,13 @@ module Daml.Control.Monad.Trans.Except (
     finallyE,
     -- * Lifting other operations
     -- liftCallCC,
-    -- liftListen,
-    -- liftPass,
+    liftListen,
+    liftPass,
   ) where
 
 import Prelude hiding (mapA)
 -- import Control.Monad.IO.Class
--- import Control.Monad.Signatures
+import Daml.Control.Monad.Signatures (Listen, Pass)
 import Daml.Control.Monad.Trans.Class
 -- import Data.Functor.Classes
 -- #if MIN_VERSION_base(4,12,0)
@@ -338,18 +338,18 @@ finallyE m closer = do
 --     runExceptT (f (\ a -> ExceptT $ c (Right a)))
 -- {-# INLINE liftCallCC #-}
 
--- -- | Lift a @listen@ operation to the new monad.
--- liftListen : (Action m) => Listen w m (Either e a) -> Listen w (ExceptT e m) a
--- liftListen listen = mapExceptT $ \ m -> do
---     (a, w) <- listen m
---     return $! fmap (\ r -> (r, w)) a
--- {-# INLINE liftListen #-}
+-- | Lift a @listen@ operation to the new monad.
+liftListen : (Action m) => Listen w m (Either e a) -> Listen w (ExceptT e m) a
+liftListen listen = mapExceptT $ \ m -> do
+    (a, w) <- listen m
+    return $ fmap (\ r -> (r, w)) a
+{-# INLINE liftListen #-}
 
--- -- | Lift a @pass@ operation to the new monad.
--- liftPass : (Action m) => Pass w m (Either e a) -> Pass w (ExceptT e m) a
--- liftPass pass = mapExceptT $ \ m -> pass $ do
---     a <- m
---     return $! case a of
---         Left l -> (Left l, id)
---         Right (r, f) -> (Right r, f)
--- {-# INLINE liftPass #-}
+-- | Lift a @pass@ operation to the new monad.
+liftPass : (Action m) => Pass w m (Either e a) -> Pass w (ExceptT e m) a
+liftPass pass = mapExceptT $ \ m -> pass $ do
+    a <- m
+    return $ case a of
+        Left l -> (Left l, identity)
+        Right (r, f) -> (Right r, f)
+{-# INLINE liftPass #-}

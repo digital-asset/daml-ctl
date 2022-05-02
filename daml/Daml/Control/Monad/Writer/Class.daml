@@ -25,6 +25,7 @@ module Daml.Control.Monad.Writer.Class (
     censor,
   ) where
 
+import Daml.Control.Monad.Trans.Except qualified as Except
 import Daml.Control.Monad.Trans.Writer qualified as Strict
 import Daml.Control.Monad.Trans.State qualified as Strict
 import Daml.Control.Monad.Trans.Reader (ReaderT, mapReaderT)
@@ -130,6 +131,7 @@ instance (Monoid w, Monad m) => MonadWriter w (StrictRWS.RWST r w s m) where
     tell   = StrictRWS.tell
     listen = StrictRWS.listen
     pass   = StrictRWS.pass
+-}
 
 -- ---------------------------------------------------------------------------
 -- Instances for other mtl transformers
@@ -138,12 +140,13 @@ instance (Monoid w, Monad m) => MonadWriter w (StrictRWS.RWST r w s m) where
 -- because they do not satisfy the coverage condition.
 
 -- | @since 2.2
-instance MonadWriter w m => MonadWriter w (ExceptT e m) where
+instance MonadWriter w m => MonadWriter w (Except.ExceptT e m) where
     writer = lift . writer
     tell   = lift . tell
     listen = Except.liftListen listen
     pass   = Except.liftPass pass
 
+{-
 instance MonadWriter w m => MonadWriter w (IdentityT m) where
     writer = lift . writer
     tell   = lift . tell

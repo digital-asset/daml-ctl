@@ -43,7 +43,7 @@ module Daml.Control.Monad.Reader.Class (
     asks,
     ) where
 
-import Daml.Control.Monad.Trans.Except (ExceptT)
+import Daml.Control.Monad.Trans.Except (ExceptT, mapExceptT)
 import Daml.Control.Monad.Trans.Reader qualified as ReaderT
 import Daml.Control.Monad.Trans.Reader (ReaderT)
 import Daml.Control.Monad.Trans.State qualified as Strict
