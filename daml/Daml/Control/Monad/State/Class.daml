@@ -33,9 +33,10 @@ module Daml.Control.Monad.State.Class (
     gets
   ) where
 
+import Daml.Control.Monad.Trans.Except (ExceptT)
 import Daml.Control.Monad.Trans.State qualified as Strict
 import Daml.Control.Monad.Trans.Writer qualified as Strict
--- import Daml.Control.Monad.Reader (ReaderT)
+import Daml.Control.Monad.Trans.Reader (ReaderT)
 import Daml.Control.Monad.Trans.Class
 
 -- | Minimal definition is either both of @get@ and @put@ or just @state@
@@ -99,11 +100,11 @@ instance Monad m => MonadState s (Strict.StateT s m) where
 --
 -- All of these instances need UndecidableInstances,
 -- because they do not satisfy the coverage condition.
-{-
-instance MonadState s m => MonadState s (ContT r m) where
-    get = lift get
-    put = lift . put
-    state = lift . state
+
+-- instance MonadState s m => MonadState s (ContT r m) where
+--     get = lift get
+--     put = lift . put
+--     state = lift . state
 
 -- | @since 2.2
 instance MonadState s m => MonadState s (ExceptT e m) where
@@ -111,6 +112,7 @@ instance MonadState s m => MonadState s (ExceptT e m) where
     put = lift . put
     state = lift . state
 
+{-
 instance MonadState s m => MonadState s (IdentityT m) where
     get = lift get
     put = lift . put
@@ -120,13 +122,12 @@ instance MonadState s m => MonadState s (MaybeT m) where
     get = lift get
     put = lift . put
     state = lift . state
+-}
 
 instance MonadState s m => MonadState s (ReaderT r m) where
     get = lift get
     put = lift . put
     state = lift . state
-
--}
 
 {-
 #if MIN_VERSION_transformers(0,5,6)

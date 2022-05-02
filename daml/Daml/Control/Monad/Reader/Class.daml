@@ -43,6 +43,7 @@ module Daml.Control.Monad.Reader.Class (
     asks,
     ) where
 
+import Daml.Control.Monad.Trans.Except (ExceptT, mapExceptT)
 import Daml.Control.Monad.Trans.Reader qualified as ReaderT
 import Daml.Control.Monad.Trans.Reader (ReaderT)
 import Daml.Control.Monad.Trans.State qualified as Strict
@@ -111,6 +112,7 @@ instance (Monad m, Monoid w) => MonadReader r (StrictRWS.RWST r w s m) where
     ask = StrictRWS.ask
     local = StrictRWS.local
     reader = StrictRWS.reader
+-}
 
 -- ---------------------------------------------------------------------------
 -- Instances for other mtl transformers
@@ -118,10 +120,10 @@ instance (Monad m, Monoid w) => MonadReader r (StrictRWS.RWST r w s m) where
 -- All of these instances need UndecidableInstances,
 -- because they do not satisfy the coverage condition.
 
-instance MonadReader r' m => MonadReader r' (ContT r m) where
-    ask   = lift ask
-    local = Cont.liftLocal ask local
-    reader = lift . reader
+-- instance MonadReader r' m => MonadReader r' (ContT r m) where
+--     ask   = lift ask
+--     local = Cont.liftLocal ask local
+--     reader = lift . reader
 
 {- | @since 2.2 -}
 instance MonadReader r m => MonadReader r (ExceptT e m) where
@@ -129,6 +131,7 @@ instance MonadReader r m => MonadReader r (ExceptT e m) where
     local = mapExceptT . local
     reader = lift . reader
 
+{-
 instance MonadReader r m => MonadReader r (IdentityT m) where
     ask   = lift ask
     local = mapIdentityT . local
