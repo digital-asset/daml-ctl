@@ -36,7 +36,7 @@ module Daml.Control.Monad.State.Class (
 import Daml.Control.Monad.Trans.Except (ExceptT)
 import Daml.Control.Monad.Trans.State qualified as Strict
 import Daml.Control.Monad.Trans.Writer qualified as Strict
--- import Daml.Control.Monad.Reader (ReaderT)
+import Daml.Control.Monad.Trans.Reader (ReaderT)
 import Daml.Control.Monad.Trans.Class
 
 -- | Minimal definition is either both of @get@ and @put@ or just @state@
@@ -122,12 +122,14 @@ instance MonadState s m => MonadState s (MaybeT m) where
     get = lift get
     put = lift . put
     state = lift . state
+-}
 
 instance MonadState s m => MonadState s (ReaderT r m) where
     get = lift get
     put = lift . put
     state = lift . state
 
+{-
 #if MIN_VERSION_transformers(0,5,6)
 -- | @since 2.3
 instance (Monoid w, MonadState s m) => MonadState s (CPS.WriterT w m) where
