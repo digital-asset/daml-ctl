@@ -6,7 +6,7 @@ The purpose of this document is to describe the procedure to release this librar
 
 1. Create a new local Git branch.
 2. In [daml.yaml](../daml.yaml), update the `version` value as required :
-   - To check what `versions` already exist, check [here](https://github.com/digital-asset/daml-ctl/tags).
+   - To check what `versions` already exist, check the existing tags [here](https://github.com/digital-asset/daml-ctl/tags).
    - Note - do not add a `v` in front of the `version` in [daml.yaml](../daml.yaml). The build script handles the naming conventions of the release, the tag and the release artifacts.
 3. Run `daml build` :
    - This command validates the specified `version`;
