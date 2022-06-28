@@ -41,7 +41,7 @@ See [here](https://semver.org/) for further information.
 
 ### Pre-release versioning
 
-Due to the underying Haskell tooling which Daml is build upon, versioning is limited to the following regex:
+Due to the underying Haskell tooling which Daml is built upon, versioning is limited to the following regex:
 
 ```
 ^(0|[1-9][0-9]*)(\.(0|[1-9][0-9]*))*$
