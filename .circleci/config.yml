@@ -50,8 +50,8 @@ commands:
     description: "Setup GPG for signing artifacts as part of a release"
     steps:
       - run:
-          name: Import GPG key
-          command: echo -e ${GPG_KEY} | gpg --import --quiet
+          name: Import Digital Asset GPG key
+          command: echo ${gpg_code_signing} | base64 -d | gpg --import --quiet
   run_release:
     description: "Run Release"
     steps:
@@ -91,12 +91,6 @@ jobs:
       - set_sdk_version
       - install_sdk
       - run:
-          name: DA key check
-          command: |
-            echo ${gpg_code_signing} | base64 -d | gpg --import --quiet
-            gpg --list-keys
-            # gpg -a --export
-      - run:
           name: Daml build
           command: daml build
       - run:
@@ -123,7 +117,6 @@ workflows:
   build:
     jobs:
       - build:
-          context: npn-publish
           filters:
             branches:
               ignore:
@@ -136,7 +129,9 @@ workflows:
               only:
                 - master
       - release:
-          context: github-fin-eng-context
+          context: 
+            - github-fin-eng-context
+            - npn-publish
           requires:
             - build
           filters:
