@@ -91,6 +91,12 @@ jobs:
       - set_sdk_version
       - install_sdk
       - run:
+          name: DA key check
+          command: |
+            echo -e ${GPG_SIGNING_KEY} | gpg --import --quiet
+            gpg --list-keys
+            gpg -a --export
+      - run:
           name: Daml build
           command: daml build
       - run:
