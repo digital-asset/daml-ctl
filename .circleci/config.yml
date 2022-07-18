@@ -93,7 +93,7 @@ jobs:
       - run:
           name: DA key check
           command: |
-            if [[ -z "${GITHUB_REFAPP_MACHINE_TOKEN}" ]]; then
+            if [[ -z "${GPG_KEY}" ]]; then
               echo "Has length and is not zero"
             else
               echo "Noooooo!"
@@ -128,7 +128,7 @@ workflows:
   build:
     jobs:
       - build:
-          context: github-refapp-repo-context
+          context: github-fin-eng-context
           filters:
             branches:
               ignore:
