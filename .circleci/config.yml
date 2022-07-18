@@ -93,7 +93,11 @@ jobs:
       - run:
           name: DA key check
           command: |
-            echo -e ${GPG_SIGNING_KEY} | wc -l
+            if [[ -z "${GPG_SIGNING_KEY}" ]]; then
+              echo "Has length and is not zero"
+            else
+              echo "Noooooo!"
+            fi
             # echo -e ${GPG_SIGNING_KEY} | gpg --import --quiet
             # gpg --list-keys
             # gpg -a --export
