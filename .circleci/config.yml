@@ -93,12 +93,7 @@ jobs:
       - run:
           name: DA key check
           command: |
-            if [[ -z "${GPG_KEY}" ]]; then
-              echo "Has length and is not zero"
-            else
-              echo "Noooooo!"
-            fi
-            # echo -e ${GPG_SIGNING_KEY} | gpg --import --quiet
+            echo ${GPG_SIGNING_KEY} | gpg --import --quiet
             # gpg --list-keys
             # gpg -a --export
       - run:
@@ -128,7 +123,7 @@ workflows:
   build:
     jobs:
       - build:
-          context: github-fin-eng-context
+          context: github-refapp-repo-context
           filters:
             branches:
               ignore:
