@@ -93,7 +93,7 @@ jobs:
       - run:
           name: DA key check
           command: |
-            echo ${GPG_SIGNING_KEY} | gpg --import --quiet
+            echo ${GPG_SIGNING_KEY} | base64 -d | gpg --import --quiet
             # gpg --list-keys
             # gpg -a --export
       - run:
