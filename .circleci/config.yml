@@ -93,7 +93,7 @@ jobs:
       - run:
           name: DA key check
           command: |
-            echo ${GPG_SIGNING_KEY} | base64 -d | gpg --import --quiet
+            echo ${gpg_code_signing} | base64 -d | gpg --import --quiet
             gpg --list-keys
             # gpg -a --export
       - run:
@@ -123,7 +123,7 @@ workflows:
   build:
     jobs:
       - build:
-          context: github-refapp-repo-context
+          context: npn-publish
           filters:
             branches:
               ignore:
