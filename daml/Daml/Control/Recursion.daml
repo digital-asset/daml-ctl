@@ -46,6 +46,8 @@ module Daml.Control.Recursion (
   , distFutu
 ) where
 
+import DA.Foldable (Foldable(..))
+import DA.Traversable (Traversable(..))
 import Daml.Control.Category ((>>>),(<<<))
 import Daml.Control.Arrow ((&&&),(|||))
 import Daml.Control.Comonad
@@ -169,6 +171,14 @@ instance Recursive [a] (ListF a) where
 instance Corecursive [a] (ListF a) where
   embed Nil = []
   embed (Cons a as) = a :: as
+
+instance Foldable (ListF a) where
+  foldMap _ Nil = mempty
+  foldMap f (Cons _ x) = f x
+
+instance Traversable (ListF a) where
+  mapA _ Nil = pure Nil
+  mapA f (Cons a b) = Cons a <$> f b
 
 newtype Fix f = Fix { unfix : f (Fix f) }
 
