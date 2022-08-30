@@ -1,9 +1,9 @@
-sdk-version: 2.0.0
+sdk-version: 2.3.2
 name: daml-ctl
 version: 0.0.1
 source: daml
 parties:
-- Alice
+  - Alice
 dependencies:
-- daml-prim
-- daml-stdlib
+  - daml-prim
+  - daml-stdlib
