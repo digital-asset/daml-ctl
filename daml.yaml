@@ -1,6 +1,6 @@
 sdk-version: 2.4.0
 name: daml-ctl
-version: 2.2.1
+version: 2.2.2
 source: daml
 dependencies:
   - daml-prim

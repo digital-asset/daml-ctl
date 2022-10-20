@@ -36,6 +36,7 @@ module Daml.Control.Recursion (
   , Recursive(..)
   , Corecursive(..)
   , ListF(..)
+  , cataM
   , hylo
   , ghylo
   , distCata
