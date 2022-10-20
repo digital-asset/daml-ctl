@@ -1,6 +1,6 @@
 {-# OPTIONS -Wno-deprecations #-} -- To supress 'Monad' warnings
 {-
-This module is adapted from Haskell's recursion-schemes. I've included the 
+This module is adapted from Haskell's recursion-schemes. I've included the
 copyright to give credit where it's due.
 
 This module differs from it in these ways:
@@ -47,13 +47,14 @@ module Daml.Control.Recursion (
 ) where
 
 import DA.Foldable (Foldable(..))
-import DA.Traversable (Traversable(..))
+import DA.Traversable (Traversable(..), mapA)
 import Daml.Control.Category ((>>>),(<<<))
 import Daml.Control.Arrow ((&&&),(|||))
 import Daml.Control.Comonad
 import Daml.Control.Monad.Trans.Free (FreeF, FreeT(..), runFreeT)
 import Daml.Control.Monad.Trans.Free qualified as F (FreeF(..))
 import Daml.Data.Functor.Identity
+import Prelude hiding (mapA)
 
 class Functor f => Recursive b f | b -> f b where
   project: b -> f b
@@ -74,6 +75,10 @@ class Functor f => Recursive b f | b -> f b where
   -- Note in Daml we can't use `Update`, as it's not a `Comonad`.
   gcata : Comonad w => (forall z . f (w z) -> w (f z)) -> (f (w a) -> a) -> b -> a
   gcata sequence f b = (_gcata sequence f >>> extract >>> f) b
+
+-- | Monadic catamorphism.
+cataM : (Monad m, Traversable f, Recursive b f) => (f a -> m a) -> b -> m a
+cataM f b = (project >>> mapA (cataM f) >>> (>>= f)) b
 
 distCata : Functor f => f (Identity a) -> Identity (f a)
 distCata = Identity . fmap runIdentity
