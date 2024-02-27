@@ -1,9 +1,7 @@
-sdk-version: 2.5.3
+sdk-version: 3.0.0-snapshot.20240221.0
 name: daml-ctl
-version: 2.4.0
+version: 4.99.0.20240226.1
 source: daml
 dependencies:
   - daml-prim
   - daml-stdlib
-build-options:
-  - --target=1.15
