@@ -9,7 +9,7 @@
 -- Portability  : portable
 --
 -------------------------------------------------------------------------------------------
-module Daml.Control.Arrow.CoKleisli 
+module Daml.Control.Arrow.CoKleisli
   ( CoKleisli(..)
   ) where
 
