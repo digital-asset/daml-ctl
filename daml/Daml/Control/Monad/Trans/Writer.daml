@@ -61,7 +61,7 @@ import Daml.Control.Monad.Trans.Class
 -- mport Data.Functor.Contravariant
 -- endif
 import Daml.Data.Functor.Identity
--- 
+--
 -- mport Control.Applicative
 -- mport Control.Monad
 -- if MIN_VERSION_base(4,9,0)

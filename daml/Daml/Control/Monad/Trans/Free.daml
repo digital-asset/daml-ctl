@@ -383,7 +383,7 @@ instance (Functor f, MonadWriter w m) => MonadWriter w (FreeT f m) where
 -- #endif
 
 -- Recursive helper fns for MonadWriter Instance
-pass' : (Functor f, MonadWriter w m) => m (FreeF f ((a, w -> w), w) (FreeT f m ((a, w -> w), w))) -> m (FreeF f a (FreeT f m a)) 
+pass' : (Functor f, MonadWriter w m) => m (FreeF f ((a, w -> w), w) (FreeT f m ((a, w -> w), w))) -> m (FreeF f a (FreeT f m a))
 pass' = join . liftM g
 g (Pure ((x, f), w)) = tell (f w) >> return (Pure x)
 g (Free f)           = return . Free . fmap (FreeT . pass' . runFreeT) $ f

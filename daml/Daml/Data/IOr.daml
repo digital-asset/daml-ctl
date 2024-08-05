@@ -1,12 +1,10 @@
---
--- Copyright (c) 2021, Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
--- SPDX-License-Identifier: BSD-3-Clause
---
+-- Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
 
 module Daml.Data.IOr where
 
-import Prelude hiding (Left, Right)
 import DA.Bifunctor
+import Prelude hiding (Left, Right)
 
 data IOr a b
   = Left a
