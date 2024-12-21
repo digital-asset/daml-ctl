@@ -31,6 +31,7 @@ module Daml.Data.Profunctor
 {-import Control.Arrow -}
 import Daml.Control.Category
 import Daml.Control.Arrow (Kleisli(..))
+import Daml.Control.Arrow.CoKleisli (CoKleisli(..))
 {-import Control.Comonad (Cokleisli(..))
 import Control.Monad (liftM)
 import Data.Bifunctor.Biff (Biff(..))
@@ -42,11 +43,11 @@ import Data.Bifunctor.Tannen (Tannen(..))
 import Data.Coerce (Coercible, coerce)
 #if __GLASGOW_HASKELL__ < 710
 import Data.Functor
-#endif
 import Data.Functor.Contravariant (Contravariant(..))
+#endif
 import Data.Tagged
 -}
-import Prelude hiding (id,(.))
+import Prelude hiding (id, (.))
 
 {-
 infixr 9 #.
@@ -196,15 +197,12 @@ instance Profunctor Tagged where
   {-# INLINE (.#) #-}
 -}
 
-liftM : Monad m => (a -> b) -> m a -> m b
-liftM f ma = ma >>= pure . f
-
 instance Monad m => Profunctor (Kleisli m) where
-  dimap f g (Kleisli h) = Kleisli (liftM g . h . f)
+  dimap f g (Kleisli h) = Kleisli (fmap g . h . f)
   {-# INLINE dimap #-}
   lmap k (Kleisli f) = Kleisli (f . k)
   {-# INLINE lmap #-}
-  rmap k (Kleisli f) = Kleisli (liftM k . f)
+  rmap k (Kleisli f) = Kleisli (fmap k . f)
   {-# INLINE rmap #-}
   -- We cannot safely overload (#.) because we didn't provide the 'Monad'.
 {-
@@ -212,18 +210,18 @@ instance Monad m => Profunctor (Kleisli m) where
   {-# INLINE (.#) #-}
 -}
 
-{-
-instance Functor w => Profunctor (Cokleisli w) where
-  dimap f g (Cokleisli h) = Cokleisli (g . h . fmap f)
+instance Functor w => Profunctor (CoKleisli w) where
+  dimap f g (CoKleisli h) = CoKleisli (g . h . fmap f)
   {-# INLINE dimap #-}
-  lmap k (Cokleisli f) = Cokleisli (f . fmap k)
+  lmap k (CoKleisli f) = CoKleisli (f . fmap k)
   {-# INLINE lmap #-}
-  rmap k (Cokleisli f) = Cokleisli (k . f)
+  rmap k (CoKleisli f) = CoKleisli (k . f)
   {-# INLINE rmap #-}
   -- We cannot safely overload (.#) because we didn't provide the 'Functor'.
-  (#.) _ = coerce (\x -> x : b) : forall a b. Coercible b a => a -> b
-  {-# INLINE (#.) #-}
+  -- (#.) _ = coerce (\x -> x : b) : forall a b. Coercible b a => a -> b
+  -- {-# INLINE (#.) #-}
 
+{-
 instance Contravariant f => Profunctor (Clown f) where
   lmap f (Clown fa) = Clown (contramap f fa)
   {-# INLINE lmap #-}
