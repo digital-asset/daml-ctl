@@ -27,14 +27,14 @@
 -- "Control.Monad.Trans.Except".
 -----------------------------------------------------------------------------
 
-module Daml.Control.Monad.Trans.Maybe (
+module Daml.Control.Monad.Trans.Optional (
     -- * The MaybeT monad transformer
-    MaybeT(..),
-    mapMaybeT,
+    OptionalT(..),
+    mapOptionalT,
     -- * Monad transformations
-    hoistMaybe,
-    maybeToExceptT,
-    exceptToMaybeT,
+    hoistOptional,
+    optionalToExceptT,
+    exceptToOptionalT,
     -- * Lifting other operations
     -- liftCallCC,
     -- liftCatch,
@@ -78,7 +78,7 @@ import DA.Traversable (Traversable, mapA)
 -- The 'return' function yields a computation that produces that
 -- value, while @>>=@ sequences two subcomputations, exiting if either
 -- computation does.
-newtype MaybeT m a = MaybeT { runMaybeT : m (Optional a) }
+newtype OptionalT m a = OptionalT { runOptionalT : m (Optional a) }
 -- #if __GLASGOW_HASKELL__ >= 710
 --     deriving (Generic, Generic1)
 -- #elif __GLASGOW_HASKELL__ >= 704
@@ -115,47 +115,47 @@ newtype MaybeT m a = MaybeT { runMaybeT : m (Optional a) }
 -- | Transform the computation inside a @MaybeT@.
 --
 -- * @'runMaybeT' ('mapMaybeT' f m) = f ('runMaybeT' m)@
-mapMaybeT : (m (Optional a) -> n (Optional b)) -> MaybeT m a -> MaybeT n b
-mapMaybeT f = MaybeT . f . runMaybeT
-{-# INLINE mapMaybeT #-}
+mapOptionalT : (m (Optional a) -> n (Optional b)) -> OptionalT m a -> OptionalT n b
+mapOptionalT f = OptionalT . f . runOptionalT
+{-# INLINE mapOptionalT #-}
 
 -- | Convert a 'Maybe' computation to 'MaybeT'.
-hoistMaybe : (Applicative m) => Optional b -> MaybeT m b
-hoistMaybe = MaybeT . pure
+hoistOptional : (Applicative m) => Optional b -> OptionalT m b
+hoistOptional = OptionalT . pure
 
 -- | Convert a 'MaybeT' computation to 'ExceptT', with a default
 -- exception value.
-maybeToExceptT : (Functor m) => e -> MaybeT m a -> ExceptT e m a
-maybeToExceptT e (MaybeT m) = ExceptT $ fmap (optional (Left e) Right) m
-{-# INLINE maybeToExceptT #-}
+optionalToExceptT : (Functor m) => e -> OptionalT m a -> ExceptT e m a
+optionalToExceptT e (OptionalT m) = ExceptT $ fmap (optional (Left e) Right) m
+{-# INLINE optionalToExceptT #-}
 
 -- | Convert a 'ExceptT' computation to 'MaybeT', discarding the
 -- value of any exception.
-exceptToMaybeT : (Functor m) => ExceptT e m a -> MaybeT m a
-exceptToMaybeT (ExceptT m) = MaybeT $ fmap (either (const None) Some) m
-{-# INLINE exceptToMaybeT #-}
+exceptToOptionalT : (Functor m) => ExceptT e m a -> OptionalT m a
+exceptToOptionalT (ExceptT m) = OptionalT $ fmap (either (const None) Some) m
+{-# INLINE exceptToOptionalT #-}
 
-instance (Functor m) => Functor (MaybeT m) where
-    fmap f = mapMaybeT (fmap (fmap f))
+instance (Functor m) => Functor (OptionalT m) where
+    fmap f = mapOptionalT (fmap (fmap f))
     {-# INLINE fmap #-}
 
-instance (Foldable f) => Foldable (MaybeT f) where
-    foldMap f (MaybeT a) = foldMap (foldMap f) a
+instance (Foldable f) => Foldable (OptionalT f) where
+    foldMap f (OptionalT a) = foldMap (foldMap f) a
     {-# INLINE foldMap #-}
 
-instance (Traversable f) => Traversable (MaybeT f) where
-    mapA f (MaybeT a) = MaybeT <$> mapA (mapA f) a
+instance (Traversable f) => Traversable (OptionalT f) where
+    mapA f (OptionalT a) = OptionalT <$> mapA (mapA f) a
     {-# INLINE mapA #-}
 
-instance (Functor m, Action m) => Applicative (MaybeT m) where
-    pure = MaybeT . return . Some
+instance (Functor m, Action m) => Applicative (OptionalT m) where
+    pure = OptionalT . return . Some
     {-# INLINE pure #-}
-    mf <*> mx = MaybeT $ do
-        mb_f <- runMaybeT mf
+    mf <*> mx = OptionalT $ do
+        mb_f <- runOptionalT mf
         case mb_f of
-            None -> return None
+            None    -> return None
             Some f  -> do
-                mb_x <- runMaybeT mx
+                mb_x <- runOptionalT mx
                 case mb_x of
                     None    -> return None
                     Some x  -> return (Some (f x))
@@ -173,16 +173,16 @@ instance (Functor m, Action m) => Applicative (MaybeT m) where
 --             Some _  -> return v
 --     {-# INLINE (<|>) #-}
 
-instance (Action m) => Action (MaybeT m) where
+instance (Action m) => Action (OptionalT m) where
 -- #if !(MIN_VERSION_base(4,8,0))
 --     return = MaybeT . return . Some
 --     {-# INLINE return #-}
 -- #endif
-    x >>= f = MaybeT $ do
-        v <- runMaybeT x
+    x >>= f = OptionalT $ do
+        v <- runOptionalT x
         case v of
             None    -> return None
-            Some y  -> runMaybeT (f y)
+            Some y  -> runOptionalT (f y)
     {-# INLINE (>>=) #-}
 -- #if !(MIN_VERSION_base(4,13,0))
 --     fail _ = MaybeT (return None)
@@ -190,8 +190,8 @@ instance (Action m) => Action (MaybeT m) where
 -- #endif
 
 -- #if MIN_VERSION_base(4,9,0)
-instance (Action m) => ActionFail (MaybeT m) where
-    fail _ = MaybeT (return None)
+instance (Action m) => ActionFail (OptionalT m) where
+    fail _ = OptionalT (return None)
     {-# INLINE fail #-}
 -- #endif
 
@@ -210,8 +210,8 @@ instance (Action m) => ActionFail (MaybeT m) where
 --       where bomb = error "mfix (MaybeT): inner computation returned None"
 --     {-# INLINE mfix #-}
 
-instance MonadTrans MaybeT where
-    lift = MaybeT . fmap Some
+instance MonadTrans OptionalT where
+    lift = OptionalT . fmap Some
     {-# INLINE lift #-}
 
 -- instance (MonadIO m) => MonadIO (MaybeT m) where
@@ -225,8 +225,8 @@ instance MonadTrans MaybeT where
 -- #endif
 
 -- #if MIN_VERSION_base(4,12,0)
-instance Contravariant m => Contravariant (MaybeT m) where
-    contramap f = MaybeT . contramap (fmap f) . runMaybeT
+instance Contravariant m => Contravariant (OptionalT m) where
+    contramap f = OptionalT . contramap (fmap f) . runOptionalT
     {-# INLINE contramap #-}
 -- #endif
 
@@ -242,15 +242,15 @@ instance Contravariant m => Contravariant (MaybeT m) where
 -- {-# INLINE liftCatch #-}
 
 -- | Lift a @listen@ operation to the new monad.
-liftListen : (Action m) => Listen w m (Optional a) -> Listen w (MaybeT m) a
-liftListen listen = mapMaybeT $ \ m -> do
+liftListen : (Action m) => Listen w m (Optional a) -> Listen w (OptionalT m) a
+liftListen listen = mapOptionalT $ \ m -> do
     (a, w) <- listen m
     return $ fmap (\ r -> (r, w)) a
 {-# INLINE liftListen #-}
 
 -- | Lift a @pass@ operation to the new monad.
-liftPass : (Action m) => Pass w m (Optional a) -> Pass w (MaybeT m) a
-liftPass pass = mapMaybeT $ \ m -> pass $ do
+liftPass : (Action m) => Pass w m (Optional a) -> Pass w (OptionalT m) a
+liftPass pass = mapOptionalT $ \ m -> pass $ do
     a <- m
     return $ case a of
         None        -> (None, identity)
