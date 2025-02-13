@@ -121,7 +121,7 @@ jobs:
       - checkout
       - install_yq
       - set_sdk_version
-      - install_sdk
+      - setup_nix
       - run:
           name: Daml build
           command: daml build
