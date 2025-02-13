@@ -1,3 +1,5 @@
 .gitignore
 .daml
 .idea
+.vscode/
+.envrc.private
