@@ -124,10 +124,16 @@ jobs:
       - setup_nix
       - run:
           name: Daml build
-          command: daml build
+          command: |
+            nix-shell \
+              --pure \
+              --run 'daml build'
       - run:
           name: Daml test
-          command: daml test
+          command: |
+            nix-shell \
+              --pure \
+              --run 'daml test'
       - save_cache:
           paths:
             - .daml
