@@ -65,6 +65,8 @@ module Daml.Control.Monad.Trans.State (
     -- $labelling
   ) where
 
+import DA.Action.State.Class (ActionState)
+import DA.Action.State.Class qualified as AS (get, put, modify)
 -- mport Control.Monad.IO.Class
 -- mport Control.Monad.Signatures
 import Daml.Control.Monad.Trans.Class
@@ -258,6 +260,11 @@ instance MonadTrans (StateT s) where
 --      contramap (\ (a, s') -> (f a, s')) $ runStateT m s
 --    {-# INLINE contramap #-}
 -- endif
+
+instance Action m => ActionState s (StateT s m) where
+  get = get
+  put = put
+  modify = modify
 
 instance ActionFail m => ActionFail (StateT s m) where
   fail = lift . fail
