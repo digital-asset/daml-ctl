@@ -103,8 +103,6 @@ import DA.Bifunctor
 import DA.Foldable
 import Prelude hiding (mapA, mapM)
 
-liftM : Monad m => (a -> r) -> m a -> m r
-liftM = fmap
 
 -- | The base functor for a free monad.
 data FreeF f a b = Pure a | Free (f b)
@@ -315,7 +313,7 @@ instance (Functor f, Read1 f, Functor m, Read1 m, Read a) => Read (FreeT f m a) 
 -}
 
 instance (Functor f, Monad m) => Functor (FreeT f m) where
-  fmap f (FreeT m) = FreeT (liftM f' m) where
+  fmap f (FreeT m) = FreeT (fmap f' m) where
     f' (Pure a)  = Pure (f a)
     f' (Free as) = Free (fmap (fmap f) as)
 
@@ -348,7 +346,7 @@ instance (Functor f, ActionFail m) => ActionFail (FreeT f m) where
   fail e = FreeT (fail e)
 
 instance MonadTrans (FreeT f) where
-  lift = FreeT . liftM Pure
+  lift = FreeT . fmap Pure
   {-# INLINE lift #-}
 
 {-
@@ -370,13 +368,13 @@ instance (Functor f, MonadReader r m) => MonadReader r (FreeT f m) where
 instance (Functor f, MonadWriter w m) => MonadWriter w (FreeT f m) where
   tell = lift . tell
   {-# INLINE tell #-}
-  listen (FreeT m) = FreeT $ liftM concat' $ listen (fmap listen `liftM` m)
+  listen (FreeT m) = FreeT $ fmap concat' $ listen (fmap listen `fmap` m)
     where
       concat' (Pure x, w) = Pure (x, w)
       concat' (Free y, w) = Free $ fmap (second (w <>)) <$> y
   pass m = FreeT . pass' . runFreeT . hoistFreeT clean $ listen m
     where
-      clean = pass . liftM (\x -> (x, const mempty))
+      clean = pass . fmap (\x -> (x, const mempty))
 -- #if MIN_VERSION_mtl(2,1,1)
   writer w = lift (writer w)
   {-# INLINE writer #-}
@@ -384,7 +382,7 @@ instance (Functor f, MonadWriter w m) => MonadWriter w (FreeT f m) where
 
 -- Recursive helper fns for MonadWriter Instance
 pass' : (Functor f, MonadWriter w m) => m (FreeF f ((a, w -> w), w) (FreeT f m ((a, w -> w), w))) -> m (FreeF f a (FreeT f m a))
-pass' = join . liftM g
+pass' = join . fmap g
 g (Pure ((x, f), w)) = tell (f w) >> return (Pure x)
 g (Free f)           = return . Free . fmap (FreeT . pass' . runFreeT) $ f
 
@@ -464,7 +462,7 @@ instance (Monad m, Traversable m, Traversable f) => Traversable (FreeT f m) wher
 --
 -- @'hoistFreeT' : ('Monad' m, 'Functor' f) => (m ~> n) -> 'FreeT' f m ~> 'FreeT' f n@
 hoistFreeT : (Monad m, Functor f) => (forall a. m a -> n a) -> FreeT f m b -> FreeT f n b
-hoistFreeT mh = FreeT . mh . liftM (fmap (hoistFreeT mh)) . runFreeT
+hoistFreeT mh = FreeT . mh . fmap (fmap (hoistFreeT mh)) . runFreeT
 
 -- | The very definition of a free monad transformer is that given a natural
 -- transformation you get a monad transformer homomorphism.
@@ -477,14 +475,14 @@ foldFreeT f (FreeT m) = lift m >>= foldFreeF
 
 -- | Lift a natural transformation from @f@ to @g@ into a monad homomorphism from @'FreeT' f m@ to @'FreeT' g m@
 transFreeT : (Monad m, Functor g) => (forall a. f a -> g a) -> FreeT f m b -> FreeT g m b
-transFreeT nt = FreeT . liftM (fmap (transFreeT nt) . transFreeF nt) . runFreeT
+transFreeT nt = FreeT . fmap (fmap (transFreeT nt) . transFreeF nt) . runFreeT
 
 -- | Pull out and join @m@ layers of @'FreeT' f m a@.
 joinFreeT : (Monad m, Traversable f) => FreeT f m a -> m (Free f a)
 joinFreeT (FreeT m) = m >>= joinFreeF
   where
     joinFreeF (Pure x) = return (return x)
-    joinFreeF (Free f) = wrap `liftM` mapA joinFreeT f
+    joinFreeF (Free f) = wrap `fmap` mapA joinFreeT f
 
 -- |
 -- 'retract' is the left inverse of 'liftF'
@@ -523,7 +521,7 @@ iterM phi = iterT phi . hoistFreeT (return . runIdentity)
 -- steps in the iteration is terminating.
 cutoff : (Functor f, Monad m) => Integer -> FreeT f m a -> FreeT f m (Maybe a)
 cutoff n _ | n <= 0 = return Nothing
-cutoff n (FreeT m) = FreeT $ bimap Just (cutoff (n - 1)) `liftM` m
+cutoff n (FreeT m) = FreeT $ bimap Just (cutoff (n - 1)) `fmap` m
 
 -- | @partialIterT n phi m@ interprets first @n@ layers of @m@ using @phi@.
 -- This is sort of the opposite for @'cutoff'@.

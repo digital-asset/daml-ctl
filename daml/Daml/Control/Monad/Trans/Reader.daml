@@ -40,6 +40,7 @@ module Daml.Control.Monad.Trans.Reader (
 
 import Daml.Control.Monad.Trans.Class (MonadTrans(..))
 import Daml.Data.Functor.Identity
+import Daml.Data.Functor.Contravariant (Contravariant, contramap)
 
 -- | The parameterizable reader monad.
 --
@@ -171,13 +172,13 @@ instance (MonadZip m) => MonadZip (ReaderT r m) where
         mzipWith f (m a) (n a)
     {-# INLINE mzipWith #-}
 #endif
+-}
 
-#if MIN_VERSION_base(4,12,0)
+-- #if MIN_VERSION_base(4,12,0)
 instance Contravariant m => Contravariant (ReaderT r m) where
     contramap f = ReaderT . fmap (contramap f) . runReaderT
     {-# INLINE contramap #-}
-#endif
--}
+-- #endif
 
 liftReaderT : m a -> ReaderT r m a
 liftReaderT m = ReaderT (const m)

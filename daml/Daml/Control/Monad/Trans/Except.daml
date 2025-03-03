@@ -57,7 +57,7 @@ import Daml.Control.Monad.Signatures (Listen, Pass)
 import Daml.Control.Monad.Trans.Class
 -- import Data.Functor.Classes
 -- #if MIN_VERSION_base(4,12,0)
--- import Data.Functor.Contravariant
+import Daml.Data.Functor.Contravariant (Contravariant, contramap)
 -- #endif
 import Daml.Data.Functor.Identity
 
@@ -262,8 +262,7 @@ instance (Action m) => Action (ExceptT e m) where
 --     {-# INLINE mfix #-}
 
 instance MonadTrans (ExceptT e) where
-    -- lift = ExceptT . liftM Right
-    lift mx = ExceptT $ Right <$> mx
+    lift = ExceptT . fmap Right
     {-# INLINE lift #-}
 
 -- instance (MonadIO m) => MonadIO (ExceptT e m) where
@@ -277,9 +276,9 @@ instance MonadTrans (ExceptT e) where
 -- #endif
 
 -- #if MIN_VERSION_base(4,12,0)
--- instance Contravariant m => Contravariant (ExceptT e m) where
---     contramap f = ExceptT . contramap (fmap f) . runExceptT
---     {-# INLINE contramap #-}
+instance Contravariant m => Contravariant (ExceptT e m) where
+    contramap f = ExceptT . contramap (fmap f) . runExceptT
+    {-# INLINE contramap #-}
 -- #endif
 
 -- | Signal an exception value @e@.
