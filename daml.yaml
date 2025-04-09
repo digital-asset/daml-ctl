@@ -13,9 +13,9 @@ sdk-version: 2.10.0
 # On the other hand, if you use a regular release like:
 # https://github.com/digital-asset/daml/releases/tag/v2.8.0
 # the daml-version would simply be: 2.8.0
-daml-version: 2.10.0
+daml-version: 3.3.0-snapshot.20250402.0
 name: daml-ctl
-version: 2.5.0
+version: 3.29.0.20250402.1
 source: daml
 dependencies:
   - daml-prim
