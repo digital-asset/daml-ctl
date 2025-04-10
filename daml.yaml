@@ -4,7 +4,7 @@
 # update the hashes. The sdk-version refers to the release folder names (or tags) found here:
 # https://github.com/digital-asset/daml/releases
 # For example 2.9.0-rc1 (in case of a release candidate) or 2.8.0 (for a regular release)
-sdk-version: 2.10.0
+sdk-version: 3.3.0-snapshot.20250409.1
 # daml-version is not used by the daml assistant, only by the nix config
 # It refers to the version number of the files of the release folder.
 # For example, if you use a release candidate like:
@@ -13,12 +13,10 @@ sdk-version: 2.10.0
 # On the other hand, if you use a regular release like:
 # https://github.com/digital-asset/daml/releases/tag/v2.8.0
 # the daml-version would simply be: 2.8.0
-daml-version: 3.3.0-snapshot.20250402.0
+daml-version: 3.3.0-snapshot.20250409.1
 name: daml-ctl
-version: 3.29.0.20250402.1
+version: 3.29.0.20250409.1
 source: daml
 dependencies:
   - daml-prim
   - daml-stdlib
-build-options:
-  - --target=1.17
