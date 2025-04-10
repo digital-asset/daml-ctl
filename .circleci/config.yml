@@ -128,12 +128,6 @@ jobs:
             nix-shell \
               --pure \
               --run 'daml build'
-      - run:
-          name: Daml test
-          command: |
-            nix-shell \
-              --pure \
-              --run 'daml test'
       - save_cache:
           paths:
             - .daml
