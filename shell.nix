@@ -20,7 +20,7 @@ let
                        curl_cert = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
                        os = if pkgs.stdenv.isDarwin then "macos" else "linux";
                        osJFrog = if pkgs.stdenv.isDarwin then "macos" else "linux-intel";
-                       hashes = { linux = "ii5kHI47ZH0Pq9BrPuMmy6vmXaZtnKZ5tHq4pnqJkt8=";
+                       hashes = { linux = "ZJe3XoxRnXLhWafI+VwuDCJ1iAUAzJ3WQiT94+AqSQ8=";
                                   macos = "ZJe3XoxRnXLhWafI+VwuDCJ1iAUAzJ3WQiT94+AqSQ8="; };});
 in
 pkgs.mkShell {
