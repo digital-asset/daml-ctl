@@ -69,7 +69,7 @@ module Daml.Control.Monad.Trans.State (
 -- mport Control.Monad.Signatures
 import Daml.Control.Monad.Trans.Class
 -- #if MIN_VERSION_base(4,12,0)
--- import Data.Functor.Contravariant
+import Daml.Data.Functor.Contravariant (Contravariant, contramap)
 -- #endif
 import Daml.Data.Functor.Identity
 
@@ -253,10 +253,10 @@ instance MonadTrans (StateT s) where
         return (a, s)
     {-# INLINE lift #-}
 -- if MIN_VERSION_base(4,12,0)
--- nstance Contravariant m => Contravariant (StateT s m) where
---    contramap f m = StateT $ \s ->
---      contramap (\ (a, s') -> (f a, s')) $ runStateT m s
---    {-# INLINE contramap #-}
+instance Contravariant m => Contravariant (StateT s m) where
+    contramap f m = StateT $ \s ->
+        contramap (\ (a, s') -> (f a, s')) $ runStateT m s
+    {-# INLINE contramap #-}
 -- endif
 
 instance ActionFail m => ActionFail (StateT s m) where
