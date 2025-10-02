@@ -20,3 +20,5 @@ source: daml
 dependencies:
   - daml-prim
   - daml-stdlib
+build-options:
+  - --target=2.dev
