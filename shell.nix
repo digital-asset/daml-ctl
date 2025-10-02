@@ -10,7 +10,15 @@ let
   build_daml = import ./nix/daml.nix;
   damlYaml = builtins.fromJSON (builtins.readFile (pkgs.runCommand "daml.yaml.json" { yamlFile = ./daml.yaml; } ''
                 ${pkgs.yj}/bin/yj < "$yamlFile" > $out
-              ''));
+              ''));              
+  os =
+    if pkgs.stdenv.isDarwin then "macos" else
+    if pkgs.stdenv.isLinux then "linux" else
+    throw "Unsupported OS";
+  arch =
+    if pkgs.stdenv.isDarwin then "x86_64" else
+    if pkgs.stdenv.hostPlatform.system == "aarch64-linux" then "aarch64"
+    else ""; #for plain `linux.tar.gz`
   daml = (build_daml { stdenv = pkgs.stdenv;
                        jdk = pkgs.openjdk11_headless;
                        sdkVersion = damlYaml.sdk-version;
@@ -18,10 +26,11 @@ let
                        tarPath = damlYaml.daml-tar-path or null;
                        curl = pkgs.curl;
                        curl_cert = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
-                       os = if pkgs.stdenv.isDarwin then "macos" else "linux";
+                       os = os;
+                       arch = arch;
                        osJFrog = if pkgs.stdenv.isDarwin then "macos" else "linux-intel";
-                       hashes = { linux = "yo33eP7dua3Hubxr3hctF4droJqD+sHho6wI92n9TrQ=";
-                                  macos = "iDUmOYOu3W6hB4OGvo39JkR7Pej8oYlOchZ4pDuOpd0="; };});
+                       hashes = { linux = "YQUfcaC9UG8CCnC9H7cOBrtPf4evcBCfYYDgk//dZwI=";
+                                  macos = "QhSD4XdOfxP4YGtJ629lrWnhV9peMJrFSHT5LmuNBvs="; };});
 in
 pkgs.mkShell {
   SSL_CERT_FILE = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";

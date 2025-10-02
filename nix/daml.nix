@@ -1,6 +1,9 @@
-{ stdenv, jdk, curl, curl_cert, sdkVersion, damlVersion, tarPath, os, osJFrog, hashes }:
+{ stdenv, jdk, curl, curl_cert, sdkVersion, damlVersion, tarPath, os, arch, osJFrog, hashes }:
 let
-  nixTarPath = if tarPath == null then null else /. + tarPath;
+  nixTarPath =
+    if builtins.isPath tarPath || builtins.isString tarPath
+    then /. + tarPath   # turn a string or path into a store path
+    else tarPath;       # if it’s already a derivation (e.g. fetchurl), just pass it through
   tarball = stdenv.mkDerivation {
     pname = "daml-tarball";
     version = sdkVersion;
@@ -26,14 +29,15 @@ let
           chmod -x $out
         fi
       )
-      get_os() (
+      get_open_source() (
         echo "Downloading SDK from GitHub..."
+        target_version="${if arch != "" then "${os}-${arch}" else "${os}"}"        
         curl --location \
-             --fail \
-             https://github.com/digital-asset/daml/releases/download/v${sdkVersion}/daml-sdk-${damlVersion}-${os}.tar.gz \
-          > $out
+            --fail \
+            https://github.com/digital-asset/daml/releases/download/v${sdkVersion}/daml-sdk-${damlVersion}-$target_version.tar.gz \
+          > $out        
       )
-      get_ee() (
+      get_enterprise_edition() (
         echo "Downloading SDK from Artifactory..."
         if [ -n "''${ARTIFACTORY_PASSWORD:-}" ]; then
           curl -u $ARTIFACTORY_USERNAME:$ARTIFACTORY_PASSWORD \
@@ -45,7 +49,7 @@ let
         fi
       )
 
-      get_local || get_os || get_ee
+      get_local || get_open_source || get_enterprise_edition
     '';
     dontInstall = true;
     outputHashAlgo = "sha256";
