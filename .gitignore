@@ -3,3 +3,4 @@
 .idea
 .vscode/
 .envrc.private
+.sdk/
