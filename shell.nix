@@ -20,7 +20,7 @@ let
     if pkgs.stdenv.hostPlatform.system == "aarch64-linux" then "aarch64"
     else ""; #for plain `linux.tar.gz`
   daml = (build_daml { stdenv = pkgs.stdenv;
-                       jdk = pkgs.openjdk11_headless;
+                       jdk = pkgs.openjdk17_headless;
                        sdkVersion = damlYaml.sdk-version;
                        damlVersion = damlYaml.daml-version;
                        tarPath = damlYaml.daml-tar-path or null;
@@ -30,7 +30,7 @@ let
                        arch = arch;
                        osJFrog = if pkgs.stdenv.isDarwin then "macos" else "linux-intel";
                        hashes = { linux = "SzHI/kpoQMCLrhckGa3oi1q6r+x3k3Jnk3AP7rPQ00Y=";
-                                  macos = "51B9gCy4nelFQRfCR7Is/KXzXqnRiw9Oxm3dEq+qG8k="; };});
+                                  macos = "jTvwP4yb5jq1Buav2/RBQKBHOID2d3Qag3m8v91mcGU="; };});
 in
 pkgs.mkShell {
   SSL_CERT_FILE = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
