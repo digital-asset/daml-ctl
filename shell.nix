@@ -29,7 +29,7 @@ let
                        os = os;
                        arch = arch;
                        osJFrog = if pkgs.stdenv.isDarwin then "macos" else "linux-intel";
-                       hashes = { linux = "u6llnAHwNZk1vyt4A/0xnCvRbcp9HPWnIMAIaTPCSuI=";
+                       hashes = { linux = "zQ93Y35SLnjT1ru2tGgaSgBH/D2vQZYBmOfACIfo0/U=";
                                   macos = "XsJ/VjIkXydC842zZJq3v4MksFnw9ZBsGKR0ihrDxlc="; };});
 in
 pkgs.mkShell {
