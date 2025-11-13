@@ -29,8 +29,8 @@ let
                        os = os;
                        arch = arch;
                        osJFrog = if pkgs.stdenv.isDarwin then "macos" else "linux-intel";
-                       hashes = { linux = "zQ93Y35SLnjT1ru2tGgaSgBH/D2vQZYBmOfACIfo0/U=";
-                                  macos = "XsJ/VjIkXydC842zZJq3v4MksFnw9ZBsGKR0ihrDxlc="; };});
+                       hashes = { linux = "uEhjXsZb6zL6Wygsdi6+lO0Nara6HlbVwqQZIVW2208=";
+                                  macos = "5UFqEW/Z/UWcRB3pv63v1OtN37S6QQXmmTIgDd9F2IQ="; };});
 in
 pkgs.mkShell {
   SSL_CERT_FILE = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
