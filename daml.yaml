@@ -15,10 +15,10 @@ sdk-version: 3.4.9
 # the daml-version would simply be: 2.8.0
 daml-version: 3.4.9
 name: daml-ctl
-version: 3.99.0.20251208.0
+version: 4.0.0
 source: daml
 dependencies:
   - daml-prim
   - daml-stdlib
 build-options:
-  - --target=2.dev
+  - --target=2.2
