@@ -21,4 +21,4 @@ dependencies:
   - daml-prim
   - daml-stdlib
 build-options:
-  - --target=2.2
+  - --target=2.dev
