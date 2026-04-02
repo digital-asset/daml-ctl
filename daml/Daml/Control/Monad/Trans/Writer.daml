@@ -58,7 +58,7 @@ import Prelude hiding (mapA)
 import Daml.Control.Monad.Trans.Class
 -- mport Data.Functor.Classes
 -- if MIN_VERSION_base(4,12,0)
--- mport Data.Functor.Contravariant
+import Daml.Data.Functor.Contravariant (Contravariant, contramap)
 -- endif
 import Daml.Data.Functor.Identity
 --
@@ -260,9 +260,9 @@ instance (Monoid w, CanAbort m) => CanAbort (WriterT w m) where
 -- endif
 
 -- if MIN_VERSION_base(4,12,0)
--- nstance Contravariant m => Contravariant (WriterT w m) where
---    contramap f = mapWriterT $ contramap $ \ (a, w) -> (f a, w)
---    {-# INLINE contramap #-}
+instance Contravariant m => Contravariant (WriterT w m) where
+    contramap f = mapWriterT $ contramap $ \ (a, w) -> (f a, w)
+    {-# INLINE contramap #-}
 -- endif
 
 -- | @'tell' w@ is an action that produces the output @w@.
